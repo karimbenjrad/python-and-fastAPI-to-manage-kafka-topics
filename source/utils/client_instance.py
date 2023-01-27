@@ -18,12 +18,12 @@ class Singleton:
 
 
 @Singleton
-class KafkaClient:
+class Kafka:
     def __init__(self):
-        self.kafka_client = None
+        self.kafka_client, self.kafka_consumer = None, None
 
     def __str__(self):
         return "Initiating models"
 
 
-kafka_client = KafkaClient.instance()
+kafka = Kafka.instance()
