@@ -1,4 +1,4 @@
-from source.schemas.data_schemas import TopicSchema
+from source.schemas.data_schemas import TopicSchema, ProduceSchema
 import logging
 
 from fastapi import APIRouter
@@ -40,3 +40,11 @@ class KafkaTopic:
     @staticmethod
     def show_topics():
         return kafka.kafka_consumer.topics()
+
+
+class KafkaProducer:
+    @staticmethod
+    def produce_person(producer_message: ProduceSchema):
+        kafka.kafka_producer.send(topic=producer_message.TOPIC_NAME, key=producer_message.MESSAGE_KEY.encode('utf-8'),
+                                  value=producer_message.PERSON.json().encode('utf-8'))
+        kafka.kafka_producer.flush()

@@ -2,8 +2,8 @@ import logging
 
 from fastapi import APIRouter, Depends
 
-from source.schemas.data_schemas import TopicSchema
-from source.services.kafka_topics import KafkaTopic
+from source.schemas.data_schemas import TopicSchema, ProduceSchema
+from source.services.kafka_topics import KafkaTopic, KafkaProducer
 
 kafka_route = APIRouter()
 logger = logging.getLogger()
@@ -20,5 +20,10 @@ async def alter_topic(topic: TopicSchema, topic_service: KafkaTopic = Depends(Ka
 
 
 @kafka_route.get('/show-topics')
-async def alter_topic(topic_service: KafkaTopic = Depends(KafkaTopic)):
+async def show_topics(topic_service: KafkaTopic = Depends(KafkaTopic)):
     return topic_service.show_topics()
+
+
+@kafka_route.post('/produce')
+async def show_topics(produce_details: ProduceSchema, producer_service: KafkaProducer = Depends(KafkaProducer)):
+    return producer_service.produce_person(produce_details)
