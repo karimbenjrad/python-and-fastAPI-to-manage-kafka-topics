@@ -19,7 +19,7 @@ app.include_router(kafka_route)
 async def startup_event():
     kafka.kafka_client = KafkaAdminClient(bootstrap_servers=os.getenv('BOOTSTRAP_SERVERS'))
     kafka.kafka_consumer = KafkaConsumer(bootstrap_servers=os.getenv('BOOTSTRAP_SERVERS'))
-    kafka.kafka_producer = KafkaProducer(bootstrap_servers=os.environ['BOOTSTRAP_SERVERS'])
+
 
 
 if __name__ == '__main__':

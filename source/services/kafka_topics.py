@@ -1,10 +1,10 @@
-from source.schemas.data_schemas import TopicSchema, ProduceSchema
-import logging
+import os
 
-from fastapi import APIRouter
-
+from kafka import KafkaProducer
 from kafka.admin import NewTopic, ConfigResource, ConfigResourceType
 from kafka.errors import TopicAlreadyExistsError
+from source.exceptions.producer_exceptions import ErrorHandler
+from source.schemas.data_schemas import ProduceSchema
 from source.schemas.data_schemas import TopicSchema
 from source.utils.client_instance import kafka
 
@@ -42,9 +42,14 @@ class KafkaTopic:
         return kafka.kafka_consumer.topics()
 
 
-class KafkaProducer:
+class KafkaProduce:
     @staticmethod
     def produce_person(producer_message: ProduceSchema):
+        kafka.kafka_producer = KafkaProducer(bootstrap_servers=os.environ['BOOTSTRAP_SERVERS'],
+                                             linger_ms=producer_message.LINGER_MS,
+                                             retries=producer_message.RETRIES,
+                                             max_in_flight_requests_per_connection=producer_message.INFLIGHT_REQS,
+                                             acks=producer_message.ACK)
         kafka.kafka_producer.send(topic=producer_message.TOPIC_NAME, key=producer_message.MESSAGE_KEY.encode('utf-8'),
-                                  value=producer_message.PERSON.json().encode('utf-8'))
+                                  value=producer_message.PERSON.json().encode('utf-8')).add_errback(ErrorHandler(producer_message.PERSON))
         kafka.kafka_producer.flush()
