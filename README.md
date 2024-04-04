@@ -42,6 +42,3 @@ This repository contains a FastAPI application that provides endpoints to intera
 
 ### Contributing
 Contributions are welcome! Please feel free to submit a pull request with any improvements or fixes.
-
-### License
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
